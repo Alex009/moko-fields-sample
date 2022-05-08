@@ -2,6 +2,8 @@ plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
     id("com.android.library")
+    id("dev.icerock.mobile.multiplatform-resources")
+    id("dev.icerock.moko.kswift")
 }
 
 version = "1.0"
@@ -19,11 +21,25 @@ kotlin {
         podfile = project.file("../iosApp/Podfile")
         framework {
             baseName = "shared"
+
+            isStatic = false
+
+            export("dev.icerock.moko:mvvm-core:0.13.0")
+            export("dev.icerock.moko:mvvm-livedata:0.13.0")
+            export("dev.icerock.moko:mvvm-livedata-resources:0.13.0")
+            export("dev.icerock.moko:resources:0.19.1")
         }
     }
-    
+
     sourceSets {
-        val commonMain by getting
+        val commonMain by getting {
+            dependencies {
+                api("dev.icerock.moko:mvvm-core:0.13.0")
+                api("dev.icerock.moko:mvvm-livedata:0.13.0")
+                api("dev.icerock.moko:mvvm-livedata-resources:0.13.0")
+                api("dev.icerock.moko:resources:0.19.1")
+            }
+        }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
@@ -59,4 +75,12 @@ android {
         minSdk = 21
         targetSdk = 32
     }
+}
+
+multiplatformResources {
+    multiplatformResourcesPackage = "ru.alex009.moko.fields"
+}
+
+kswift {
+    install(dev.icerock.moko.kswift.plugin.feature.PlatformExtensionFunctionsFeature)
 }

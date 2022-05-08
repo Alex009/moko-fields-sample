@@ -1,20 +1,52 @@
 package ru.alex009.moko.fields.myapplication.android
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import ru.alex009.moko.fields.myapplication.Greeting
-import android.widget.TextView
-
-fun greet(): String {
-    return Greeting().greeting()
-}
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleOwner
+import com.google.android.material.textfield.TextInputLayout
+import dev.icerock.moko.mvvm.getViewModel
+import dev.icerock.moko.mvvm.livedata.Closeable
+import dev.icerock.moko.mvvm.livedata.LiveData
+import dev.icerock.moko.mvvm.livedata.bindTextTwoWay
+import dev.icerock.moko.mvvm.utils.bind
+import dev.icerock.moko.mvvm.utils.bindNotNull
+import dev.icerock.moko.resources.desc.StringDesc
+import ru.alex009.moko.fields.myapplication.LoginViewModel
+import ru.alex009.moko.fields.myapplication.android.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        val tv: TextView = findViewById(R.id.text_view)
-        tv.text = greet()
+        val binding: ActivityMainBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        val viewModel: LoginViewModel = getViewModel { LoginViewModel() }
+
+        binding.loginText.bindTextTwoWay(this, viewModel.login)
+        binding.loginText.setOnFocusChangeListener { _, focused ->
+            if (focused) return@setOnFocusChangeListener
+            viewModel.isLoginInputComplete.value = true
+        }
+        binding.loginLayout.bindError(this, viewModel.loginError)
+
+        binding.passwordText.bindTextTwoWay(this, viewModel.password)
+        binding.passwordText.setOnFocusChangeListener { _, focused ->
+            if (focused) return@setOnFocusChangeListener
+            viewModel.isPasswordInputComplete.value = true
+        }
+        binding.passwordLayout.bindError(this, viewModel.passwordError)
+
+        binding.loginBtn.setOnClickListener { viewModel.onLoginPressed() }
+    }
+}
+
+fun <T : StringDesc?> TextInputLayout.bindError(
+    lifecycleOwner: LifecycleOwner,
+    liveData: LiveData<T>
+): Closeable {
+    return liveData.bind(lifecycleOwner) {
+        this.error = it?.toString(this.context)
+        this.isErrorEnabled = it != null
     }
 }

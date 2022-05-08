@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="login_blank_error">Login should not be blank</string>
+    <string name="password_blank_error">Password should not be blank</string>
+</resources>
