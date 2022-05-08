@@ -1,8 +1,8 @@
 package ru.alex009.moko.fields.myapplication
 
 import dev.icerock.moko.fields.FormField
+import dev.icerock.moko.fields.liveBlock
 import dev.icerock.moko.fields.validate
-import dev.icerock.moko.mvvm.livedata.map
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.desc
@@ -12,11 +12,9 @@ class LoginViewModel : ViewModel() {
     // region Login LiveData
     val login: FormField<String, StringDesc> = FormField(
         initialValue = "",
-        validation = { liveData ->
-            liveData.map {
-                if (it.isBlank()) MR.strings.login_blank_error.desc()
-                else null
-            }
+        validation = liveBlock {
+            if (it.isBlank()) MR.strings.login_blank_error.desc()
+            else null
         }
     )
     // endregion
@@ -24,11 +22,9 @@ class LoginViewModel : ViewModel() {
     // region Password LiveData
     val password: FormField<String, StringDesc> = FormField(
         initialValue = "",
-        validation = { liveData ->
-            liveData.map {
-                if (it.isBlank()) MR.strings.password_blank_error.desc()
-                else null
-            }
+        validation = liveBlock {
+            if (it.isBlank()) MR.strings.password_blank_error.desc()
+            else null
         }
     )
     // endregion
