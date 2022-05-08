@@ -5,7 +5,11 @@ import dev.icerock.moko.fields.validate
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.desc
+import dev.icerock.moko.validations.ValidationResult
 import dev.icerock.moko.validations.fieldValidation
+import dev.icerock.moko.validations.matchRegex
+import dev.icerock.moko.validations.maxLength
+import dev.icerock.moko.validations.minLength
 import dev.icerock.moko.validations.notBlank
 import ru.alex009.moko.fields.MR
 
@@ -15,6 +19,10 @@ class LoginViewModel : ViewModel() {
         initialValue = "",
         validation = fieldValidation {
             notBlank(MR.strings.login_blank_error.desc())
+            minLength("can't be less 4 char".desc(), 4)
+            maxLength("should be less 20 chars".desc(), 20)
+            notAdmin("should not be admin!".desc())
+            matchRegex("should have @".desc(), Regex(".*@.*"))
         }
     )
     // endregion
@@ -36,5 +44,13 @@ class LoginViewModel : ViewModel() {
 
     private fun authorize(login: String, password: String) {
         println("here we should do authorization with $login:$password")
+    }
+}
+
+fun ValidationResult<String>.notAdmin(errorText: StringDesc) = nextValidation { value ->
+    if (value.lowercase() != "admin") {
+        ValidationResult.success(value)
+    } else {
+        ValidationResult.failure(errorText)
     }
 }
