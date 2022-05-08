@@ -28,6 +28,7 @@ kotlin {
             export("dev.icerock.moko:mvvm-livedata:0.13.0")
             export("dev.icerock.moko:mvvm-livedata-resources:0.13.0")
             export("dev.icerock.moko:resources:0.19.1")
+            export("dev.icerock.moko:fields:0.9.0")
         }
     }
 
@@ -38,6 +39,7 @@ kotlin {
                 api("dev.icerock.moko:mvvm-livedata:0.13.0")
                 api("dev.icerock.moko:mvvm-livedata-resources:0.13.0")
                 api("dev.icerock.moko:resources:0.19.1")
+                api("dev.icerock.moko:fields:0.9.0")
             }
         }
         val commonTest by getting {

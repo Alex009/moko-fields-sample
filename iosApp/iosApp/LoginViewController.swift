@@ -25,13 +25,13 @@ class LoginViewController: UIViewController {
         
         viewModel = LoginViewModel()
         
-        loginField.bindTextTwoWay(liveData: viewModel.login)
-        loginErrorLabel.bindText(liveData: viewModel.loginError)
-        loginErrorLabel.bindHidden(liveData: viewModel.isLoginErrorShowed.revert())
+        loginField.bindTextTwoWay(liveData: viewModel.login.data)
+        loginErrorLabel.bindText(liveData: viewModel.login.error)
+        loginErrorLabel.bindHidden(liveData: viewModel.login.isValid)
         
-        passwordField.bindTextTwoWay(liveData: viewModel.password)
-        passwordErrorLabel.bindText(liveData: viewModel.passwordError)
-        passwordErrorLabel.bindHidden(liveData: viewModel.isPasswordErrorShowed.revert())
+        passwordField.bindTextTwoWay(liveData: viewModel.password.data)
+        passwordErrorLabel.bindText(liveData: viewModel.password.error)
+        passwordErrorLabel.bindHidden(liveData: viewModel.password.isValid)
     }
     
     @IBAction private func onLoginPressed() {
@@ -42,10 +42,10 @@ class LoginViewController: UIViewController {
 extension LoginViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
         if textField == loginField {
-            viewModel.isLoginInputComplete.value = true
+            viewModel.login.validate()
         }
         if textField == passwordField {
-            viewModel.isPasswordInputComplete.value = true
+            viewModel.password.validate()
         }
     }
     
